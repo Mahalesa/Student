@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Student.Data;
 using Student.Models;
 using System.ComponentModel.DataAnnotations;
@@ -20,7 +21,7 @@ namespace Student.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> Add(AddStudentViewModel viewModel)
+        public async Task<IActionResult> Add(AddStudentViewModel viewModel)
         {
             var student = new Models.Entities.Student
             {
@@ -35,5 +36,16 @@ namespace Student.Controllers
 
 
         }
+
+        [HttpGet] 
+        public async Task<IActionResult> List()
+        {
+
+            var students = await dbContext.Students.ToListAsync();
+            return View(students);
+
+        }
+
+
     }
 }
