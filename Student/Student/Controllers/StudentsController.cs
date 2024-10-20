@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Student.Data;
 using Student.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Student.Controllers
 {
@@ -37,7 +38,7 @@ namespace Student.Controllers
 
         }
 
-        [HttpGet] 
+        [HttpGet]
         public async Task<IActionResult> List()
         {
 
@@ -46,6 +47,28 @@ namespace Student.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid ID)
+        {
+            var student = await dbContext.Students.FindAsync(ID);
+            return View(student);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Student.Models.Entities.Student viewModel)
+        {
+            var student = await dbContext.Students.FindAsync(viewModel.ID);
+            if (student is not null)
+            {
+                student.Name = viewModel.Name;
+                student.Email = viewModel.Email;
+                student.Phone = viewModel.Phone;
+                student.Subscribed = viewModel.Subscribed;
+                await dbContext.SaveChangesAsync();
+            }
+            return RedirectToAction("List", "Students");
+
+        }
 
     }
 }
